@@ -1,8 +1,10 @@
 package com.example.mall.controller;
 
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import com.example.mall.common.ApiResponse;
+import com.example.mall.exception.BusinessException;
+import com.example.mall.exception.ValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

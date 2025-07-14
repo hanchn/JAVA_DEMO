@@ -1,5 +1,6 @@
 package com.example.mall.controller;
 
+import com.example.mall.common.ApiResponse;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import java.util.HashMap;
