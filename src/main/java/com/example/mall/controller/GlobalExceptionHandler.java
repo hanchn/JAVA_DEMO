@@ -5,6 +5,7 @@ import com.example.mall.exception.BusinessException;
 import com.example.mall.exception.ValidationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.http.ResponseEntity;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {

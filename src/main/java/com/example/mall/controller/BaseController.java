@@ -14,7 +14,7 @@ public abstract class BaseController {
     }
     
     protected ResponseEntity<ApiResponse<Object>> success(Object data, String message) {
-        return ResponseEntity.ok(ApiResponse.success(data, message));
+        return ResponseEntity.ok(ApiResponse.success(message, data));
     }
     
     protected ResponseEntity<ApiResponse<Object>> error(String message) {

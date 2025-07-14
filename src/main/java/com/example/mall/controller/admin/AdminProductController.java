@@ -1,6 +1,7 @@
 package com.example.mall.controller.admin;
 
 import com.example.mall.controller.BaseController;
+import com.example.mall.dto.request.ProductRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 

@@ -1,6 +1,7 @@
 package com.example.mall.controller.cart;
 
 import com.example.mall.controller.BaseController;
+import com.example.mall.dto.request.CartItemRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 

@@ -1,6 +1,9 @@
 package com.example.mall.controller.user;
 
 import com.example.mall.controller.BaseController;
+import com.example.mall.dto.request.UserRegisterRequest;
+import com.example.mall.dto.request.UserLoginRequest;
+import com.example.mall.dto.request.UserProfileRequest;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
 
