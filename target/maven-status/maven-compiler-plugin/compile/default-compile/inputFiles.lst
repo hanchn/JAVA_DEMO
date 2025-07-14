@@ -1,9 +1,9 @@
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/dto/request/AddressRequest.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/Application.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/exception/ValidationException.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/dto/request/CreateOrderRequest.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/controller/cart/CartController.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/dto/request/PaymentRequest.java
-/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/todolist/TodolistDemoApplication.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/controller/payment/PaymentController.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/exception/BusinessException.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/mall/dto/request/UserProfileRequest.java

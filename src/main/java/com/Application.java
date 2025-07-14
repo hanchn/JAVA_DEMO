@@ -1,4 +1,4 @@
-package com.example.todolist;
+package com;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,11 +8,12 @@ import com.example.todolist.config.AppConstants;
 
 @SpringBootApplication
 @EnableConfigurationProperties(AppConstants.class)
-public class TodolistDemoApplication {
+public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(TodolistDemoApplication.class, args);
+        SpringApplication.run(Application.class, args);
         System.out.println("Hello World !");
+        System.out.println("测试热更新 !");
     }
 
 }

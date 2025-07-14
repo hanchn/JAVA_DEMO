@@ -6,12 +6,12 @@ com/example/mall/controller/admin/AdminProductController.class
 com/example/mall/controller/cart/CartController.class
 com/example/todolist/config/AppConstants$Security$Cors.class
 com/example/mall/controller/BaseController.class
-com/example/todolist/TodolistDemoApplication.class
 com/example/todolist/config/AppConstants$Cache.class
 com/example/todolist/config/AppConstants$Security.class
 com/example/mall/dto/request/PaymentRequest.class
 com/example/mall/dto/request/UserRegisterRequest.class
 com/example/mall/controller/product/CategoryController.class
+com/Application.class
 com/example/mall/dto/request/UserLoginRequest.class
 com/example/mall/controller/payment/PaymentController.class
 com/example/mall/controller/product/ProductController.class
