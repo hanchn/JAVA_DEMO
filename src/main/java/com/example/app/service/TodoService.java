@@ -1,183 +1,130 @@
 package com.example.app.service;
 
+import com.example.app.dataaccess.TodoDataAccess;
+import com.example.app.dto.request.TodoCreateRequest;
+import com.example.app.dto.request.TodoUpdateRequest;
+import com.example.app.dto.response.TodoListResponse;
+import com.example.app.dto.response.TodoResponse;
+import com.example.app.entity.Todo;
+import com.example.app.exception.TodoNotFoundException;
+import com.example.app.mapper.TodoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.app.entity.Todo;
-import com.example.app.repository.TodoRepository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @Service
 @Transactional
 public class TodoService {
-
+    
     @Autowired
-    private TodoRepository todoRepository;
-
+    private TodoDataAccess todoDataAccess;
+    
+    @Autowired
+    private TodoMapper todoMapper;
+    
     /**
-     * 获取所有待办事项
+     * 创建新的Todo
      */
-    public List<Todo> getAllTodos() {
-        return todoRepository.findAll();
+    public TodoResponse createTodo(TodoCreateRequest request) {
+        Todo todo = todoMapper.toEntity(request);
+        Todo savedTodo = todoDataAccess.save(todo);
+        return todoMapper.toResponse(savedTodo);
     }
-
+    
     /**
-     * 根据ID获取待办事项
+     * 获取所有Todo
      */
-    public Optional<Todo> getTodoById(Long id) {
-        return todoRepository.findById(id);
+    @Transactional(readOnly = true)
+    public TodoListResponse getAllTodos() {
+        List<Todo> todos = todoDataAccess.findAll();
+        List<TodoResponse> todoResponses = todoMapper.toResponseList(todos);
+        
+        int totalCount = todos.size();
+        int completedCount = (int) todos.stream().filter(Todo::getCompleted).count();
+        int pendingCount = totalCount - completedCount;
+        
+        return new TodoListResponse(todoResponses, totalCount, completedCount, pendingCount);
     }
-
+    
     /**
-     * 创建新的待办事项
+     * 根据ID获取Todo
      */
-    public Todo createTodo(Todo todo) {
-        // 设置默认值
-        if (todo.getCompleted() == null) {
-            todo.setCompleted(false);
+    @Transactional(readOnly = true)
+    public TodoResponse getTodoById(Long id) {
+        Todo todo = todoDataAccess.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+        return todoMapper.toResponse(todo);
+    }
+    
+    /**
+     * 更新Todo
+     */
+    public TodoResponse updateTodo(Long id, TodoUpdateRequest request) {
+        Todo todo = todoDataAccess.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+        
+        todoMapper.updateEntity(todo, request);
+        Todo updatedTodo = todoDataAccess.save(todo);
+        return todoMapper.toResponse(updatedTodo);
+    }
+    
+    /**
+     * 删除Todo
+     */
+    public void deleteTodo(Long id) {
+        if (!todoDataAccess.existsById(id)) {
+            throw new TodoNotFoundException(id);
         }
-        if (todo.getPriority() == null || todo.getPriority().isEmpty()) {
-            todo.setPriority("MEDIUM");
-        }
-        return todoRepository.save(todo);
+        todoDataAccess.deleteById(id);
     }
-
-    /**
-     * 更新待办事项
-     */
-    public Todo updateTodo(Long id, Todo todoDetails) {
-        Optional<Todo> optionalTodo = todoRepository.findById(id);
-        if (optionalTodo.isPresent()) {
-            Todo todo = optionalTodo.get();
-
-            // 更新字段
-            if (todoDetails.getTitle() != null) {
-                todo.setTitle(todoDetails.getTitle());
-            }
-            if (todoDetails.getDescription() != null) {
-                todo.setDescription(todoDetails.getDescription());
-            }
-            if (todoDetails.getCompleted() != null) {
-                todo.setCompleted(todoDetails.getCompleted());
-            }
-            if (todoDetails.getPriority() != null) {
-                todo.setPriority(todoDetails.getPriority());
-            }
-            if (todoDetails.getCategory() != null) {
-                todo.setCategory(todoDetails.getCategory());
-            }
-
-            return todoRepository.save(todo);
-        }
-        throw new RuntimeException("Todo not found with id: " + id);
-    }
-
-    /**
-     * 删除待办事项
-     */
-    public boolean deleteTodo(Long id) {
-        if (todoRepository.existsById(id)) {
-            todoRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
+    
     /**
      * 切换完成状态
      */
-    public Todo toggleComplete(Long id) {
-        Optional<Todo> optionalTodo = todoRepository.findById(id);
-        if (optionalTodo.isPresent()) {
-            Todo todo = optionalTodo.get();
-            todo.setCompleted(!todo.getCompleted());
-            return todoRepository.save(todo);
-        }
-        throw new RuntimeException("Todo not found with id: " + id);
+    public TodoResponse toggleComplete(Long id) {
+        Todo todo = todoDataAccess.findById(id)
+                .orElseThrow(() -> new TodoNotFoundException(id));
+        
+        todo.setCompleted(!todo.getCompleted());
+        Todo updatedTodo = todoDataAccess.save(todo);
+        return todoMapper.toResponse(updatedTodo);
     }
-
+    
     /**
-     * 根据完成状态获取待办事项
+     * 根据完成状态获取Todo
      */
-    public List<Todo> getTodosByCompleted(Boolean completed) {
-        return todoRepository.findByCompleted(completed);
+    @Transactional(readOnly = true)
+    public List<TodoResponse> getTodosByCompleted(Boolean completed) {
+        List<Todo> todos = todoDataAccess.findByCompleted(completed);
+        return todoMapper.toResponseList(todos);
     }
-
+    
     /**
-     * 根据优先级获取待办事项
+     * 搜索Todo
      */
-    public List<Todo> getTodosByPriority(String priority) {
-        return todoRepository.findByPriority(priority);
+    @Transactional(readOnly = true)
+    public List<TodoResponse> searchTodos(String keyword) {
+        List<Todo> todos = todoDataAccess.searchByKeyword(keyword);
+        return todoMapper.toResponseList(todos);
     }
-
-    /**
-     * 根据分类获取待办事项
-     */
-    public List<Todo> getTodosByCategory(String category) {
-        return todoRepository.findByCategory(category);
-    }
-
-    /**
-     * 搜索待办事项
-     */
-    public List<Todo> searchTodos(String keyword) {
-        return todoRepository.searchByKeyword(keyword);
-    }
-
-    /**
-     * 获取高优先级未完成任务
-     */
-    public List<Todo> getHighPriorityPendingTodos() {
-        return todoRepository.findHighPriorityPendingTodos();
-    }
-
-    /**
-     * 批量更新完成状态
-     */
-    public int batchUpdateCompleted(List<Long> ids, Boolean completed) {
-        int count = 0;
-        for (Long id : ids) {
-            Optional<Todo> optionalTodo = todoRepository.findById(id);
-            if (optionalTodo.isPresent()) {
-                Todo todo = optionalTodo.get();
-                todo.setCompleted(completed);
-                todoRepository.save(todo);
-                count++;
-            }
-        }
-        return count;
-    }
-
+    
     /**
      * 获取统计信息
      */
+    @Transactional(readOnly = true)
     public Map<String, Object> getStatistics() {
         Map<String, Object> stats = new HashMap<>();
-
-        long totalCount = todoRepository.count();
-        long completedCount = todoRepository.countCompletedTodos();
-        long pendingCount = todoRepository.countPendingTodos();
-
-        long highPriorityCount = todoRepository.countByPriority("HIGH");
-        long mediumPriorityCount = todoRepository.countByPriority("MEDIUM");
-        long lowPriorityCount = todoRepository.countByPriority("LOW");
-
-        stats.put("total", totalCount);
-        stats.put("completed", completedCount);
-        stats.put("pending", pendingCount);
-        stats.put("completionRate", totalCount > 0 ? (double) completedCount / totalCount * 100 : 0);
-
-        Map<String, Long> priorityStats = new HashMap<>();
-        priorityStats.put("high", highPriorityCount);
-        priorityStats.put("medium", mediumPriorityCount);
-        priorityStats.put("low", lowPriorityCount);
-        stats.put("priority", priorityStats);
-
+        stats.put("totalCount", todoDataAccess.findAll().size());
+        stats.put("completedCount", todoDataAccess.countCompletedTodos());
+        stats.put("pendingCount", todoDataAccess.countPendingTodos());
+        stats.put("highPriorityCount", todoDataAccess.countByPriority("HIGH"));
+        stats.put("mediumPriorityCount", todoDataAccess.countByPriority("MEDIUM"));
+        stats.put("lowPriorityCount", todoDataAccess.countByPriority("LOW"));
+        
         return stats;
     }
 }
