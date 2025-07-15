@@ -1,62 +1,79 @@
 package com.example.todolist.service;
 
-import com.example.todolist.dto.request.TodoCreateRequest;
-import com.example.todolist.dto.request.TodoUpdateRequest;
-import com.example.todolist.dto.request.TodoQueryRequest;
-import com.example.todolist.dto.response.TodoResponse;
-import com.example.todolist.dto.response.TodoListResponse;
+import com.example.todolist.entity.Todo;
+import com.example.todolist.repository.TodoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-/**
- * 待办事项业务服务接口
- */
-public interface TodoService {
+@Service
+public class TodoService {
     
-    /**
-     * 获取待办事项列表（支持查询和分页）
-     */
-    TodoListResponse getTodos(TodoQueryRequest queryRequest);
+    @Autowired
+    private TodoRepository todoRepository;
     
-    /**
-     * 根据ID获取单个待办事项
-     */
-    Optional<TodoResponse> getTodoById(Integer id);
+    // 获取所有待办事项
+    public List<Todo> getAllTodos() {
+        return todoRepository.findAll();
+    }
     
-    /**
-     * 创建新的待办事项
-     */
-    TodoResponse createTodo(TodoCreateRequest request);
+    // 根据ID获取待办事项
+    public Optional<Todo> getTodoById(Long id) {
+        return todoRepository.findById(id);
+    }
     
-    /**
-     * 更新待办事项
-     */
-    Optional<TodoResponse> updateTodo(Integer id, TodoUpdateRequest request);
+    // 创建新的待办事项
+    public Todo createTodo(Todo todo) {
+        return todoRepository.save(todo);
+    }
     
-    /**
-     * 删除待办事项
-     */
-    boolean deleteTodo(Integer id);
+    // 更新待办事项
+    public Todo updateTodo(Long id, Todo todoDetails) {
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+        if (optionalTodo.isPresent()) {
+            Todo todo = optionalTodo.get();
+            todo.setTitle(todoDetails.getTitle());
+            todo.setDescription(todoDetails.getDescription());
+            todo.setCompleted(todoDetails.getCompleted());
+            return todoRepository.save(todo);
+        }
+        return null;
+    }
     
-    /**
-     * 批量更新状态
-     */
-    int batchUpdateStatus(List<Integer> ids, Boolean completed);
+    // 删除待办事项
+    public boolean deleteTodo(Long id) {
+        if (todoRepository.existsById(id)) {
+            todoRepository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
     
-    /**
-     * 获取统计信息
-     */
-    Map<String, Object> getStats();
+    // 切换完成状态
+    public Todo toggleComplete(Long id) {
+        Optional<Todo> optionalTodo = todoRepository.findById(id);
+        if (optionalTodo.isPresent()) {
+            Todo todo = optionalTodo.get();
+            todo.setCompleted(!todo.getCompleted());
+            return todoRepository.save(todo);
+        }
+        return null;
+    }
     
-    /**
-     * 同步待办事项到第三方服务
-     */
-    boolean syncToExternalService(Integer todoId);
+    // 获取未完成的任务
+    public List<Todo> getPendingTodos() {
+        return todoRepository.findPendingTodos();
+    }
     
-    /**
-     * 从第三方服务导入待办事项
-     */
-    List<TodoResponse> importFromExternalService(String userId);
+    // 获取已完成的任务
+    public List<Todo> getCompletedTodos() {
+        return todoRepository.findCompletedTodos();
+    }
+    
+    // 根据标题搜索
+    public List<Todo> searchTodos(String keyword) {
+        return todoRepository.findByTitleContainingIgnoreCase(keyword);
+    }
 }

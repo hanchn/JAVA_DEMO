@@ -1,39 +1,46 @@
-package com.example.todolist.dto.response;
+package com.example.todolist.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-/**
- * 待办事项响应DTO
- */
-public class TodoResponse {
+@Entity
+@Table(name = "todos")
+public class Todo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    private Integer id;
+    @Column(nullable = false)
     private String title;
+    
     private String description;
-    private Boolean completed;
-    private String priority;
-    private String category;
+    
+    @Column(nullable = false)
+    private Boolean completed = false;
+    
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
+    
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
     // 构造函数
-    public TodoResponse() {}
+    public Todo() {}
     
-    public TodoResponse(Integer id, String title, String description, Boolean completed) {
-        this.id = id;
+    public Todo(String title, String description) {
         this.title = title;
         this.description = description;
-        this.completed = completed;
+        this.completed = false;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
     
-    // Getter和Setter方法
-    public Integer getId() {
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
     
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
     
@@ -59,22 +66,7 @@ public class TodoResponse {
     
     public void setCompleted(Boolean completed) {
         this.completed = completed;
-    }
-    
-    public String getPriority() {
-        return priority;
-    }
-    
-    public void setPriority(String priority) {
-        this.priority = priority;
-    }
-    
-    public String getCategory() {
-        return category;
-    }
-    
-    public void setCategory(String category) {
-        this.category = category;
+        this.updatedAt = LocalDateTime.now();
     }
     
     public LocalDateTime getCreatedAt() {
@@ -91,5 +83,17 @@ public class TodoResponse {
     
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+    
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    @PrePersist
+    public void prePersist() {
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 }
