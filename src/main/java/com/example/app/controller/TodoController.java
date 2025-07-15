@@ -26,6 +26,7 @@ public class TodoController {
     @GetMapping
     public ResponseEntity<List<Todo>> getAllTodos() {
         List<Todo> todos = todoService.getAllTodos();
+        System.err.println("获取所有待办事项");
         return ResponseEntity.ok(todos);
     }
 
@@ -35,6 +36,7 @@ public class TodoController {
     @GetMapping("/{id}")
     public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
         Optional<Todo> todo = todoService.getTodoById(id);
+        System.err.println("根据ID获取待办事项" + id);
         return todo.map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
