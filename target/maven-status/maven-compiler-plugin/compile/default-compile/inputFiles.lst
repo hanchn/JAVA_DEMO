@@ -1,7 +1,16 @@
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/config/AppConstants.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dataaccess/TodoDataAccess.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/controller/TodoController.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/Main.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/mapper/TodoMapper.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/repository/TodoRepository.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dataaccess/impl/TodoDataAccessImpl.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/exception/GlobalExceptionHandler.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dto/response/TodoListResponse.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/exception/TodoNotFoundException.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dto/response/TodoResponse.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/service/TodoService.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/config/DataInitializer.java
-/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/repository/TodoRepository.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dto/request/TodoCreateRequest.java
+/Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/dto/request/TodoUpdateRequest.java
 /Users/yuanjing/Desktop/JAVA_DEMO/src/main/java/com/example/app/entity/Todo.java
