@@ -10,28 +10,48 @@ public class Todo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(nullable = false, length = 200)
     private String title;
     
+    @Column(length = 1000)
     private String description;
     
     @Column(nullable = false)
     private Boolean completed = false;
     
-    @Column(name = "created_at")
+    @Column(length = 20)
+    private String priority = "MEDIUM"; // LOW, MEDIUM, HIGH
+    
+    @Column(length = 50)
+    private String category;
+    
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
-    @Column(name = "updated_at")
+    @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
     
     // 构造函数
-    public Todo() {}
+    public Todo() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
     
     public Todo(String title, String description) {
+        this();
         this.title = title;
         this.description = description;
-        this.completed = false;
+    }
+    
+    // JPA生命周期回调
+    @PrePersist
+    protected void onCreate() {
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
+    }
+    
+    @PreUpdate
+    protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
     
@@ -66,7 +86,22 @@ public class Todo {
     
     public void setCompleted(Boolean completed) {
         this.completed = completed;
-        this.updatedAt = LocalDateTime.now();
+    }
+    
+    public String getPriority() {
+        return priority;
+    }
+    
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+    
+    public String getCategory() {
+        return category;
+    }
+    
+    public void setCategory(String category) {
+        this.category = category;
     }
     
     public LocalDateTime getCreatedAt() {
@@ -85,15 +120,14 @@ public class Todo {
         this.updatedAt = updatedAt;
     }
     
-    @PreUpdate
-    public void preUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-    
-    @PrePersist
-    public void prePersist() {
-        LocalDateTime now = LocalDateTime.now();
-        this.createdAt = now;
-        this.updatedAt = now;
+    @Override
+    public String toString() {
+        return "Todo{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", completed=" + completed +
+                ", priority='" + priority + '\'' +
+                ", category='" + category + '\'' +
+                '}';
     }
 }

@@ -1,6 +1,8 @@
 com/example/todolist/service/TodoService.class
 com/Application.class
+com/example/todolist/config/DataInitializer.class
 com/example/todolist/config/AppConstants$Security$Cors.class
+com/example/todolist/config/AppConfig.class
 com/example/todolist/repository/TodoRepository.class
 com/example/todolist/entity/Todo.class
 com/example/todolist/config/AppConstants$Security$Ssl.class
