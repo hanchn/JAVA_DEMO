@@ -1,10 +1,11 @@
-package com.example.todolist.config;
+package com.example.app.config;
 
-import com.example.todolist.entity.Todo;
-import com.example.todolist.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+
+import com.example.app.entity.Todo;
+import com.example.app.repository.TodoRepository;
 
 import java.time.LocalDateTime;
 

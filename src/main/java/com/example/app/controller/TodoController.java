@@ -1,11 +1,12 @@
-package com.example.todolist.controller;
+package com.example.app.controller;
 
-import com.example.todolist.entity.Todo;
-import com.example.todolist.service.TodoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import com.example.app.entity.Todo;
+import com.example.app.service.TodoService;
 
 import java.util.List;
 import java.util.Map;
@@ -15,10 +16,10 @@ import java.util.Optional;
 @RequestMapping("/api/todos")
 @CrossOrigin(origins = "*")
 public class TodoController {
-    
+
     @Autowired
     private TodoService todoService;
-    
+
     /**
      * 获取所有待办事项
      */
@@ -27,7 +28,7 @@ public class TodoController {
         List<Todo> todos = todoService.getAllTodos();
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 根据ID获取待办事项
      */
@@ -35,9 +36,9 @@ public class TodoController {
     public ResponseEntity<Todo> getTodoById(@PathVariable Long id) {
         Optional<Todo> todo = todoService.getTodoById(id);
         return todo.map(ResponseEntity::ok)
-                  .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
-    
+
     /**
      * 创建新的待办事项
      */
@@ -50,7 +51,7 @@ public class TodoController {
             return ResponseEntity.badRequest().build();
         }
     }
-    
+
     /**
      * 更新待办事项
      */
@@ -63,7 +64,7 @@ public class TodoController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     /**
      * 删除待办事项
      */
@@ -72,7 +73,7 @@ public class TodoController {
         boolean deleted = todoService.deleteTodo(id);
         return deleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
     }
-    
+
     /**
      * 切换完成状态
      */
@@ -85,7 +86,7 @@ public class TodoController {
             return ResponseEntity.notFound().build();
         }
     }
-    
+
     /**
      * 根据完成状态获取待办事项
      */
@@ -94,7 +95,7 @@ public class TodoController {
         List<Todo> todos = todoService.getTodosByCompleted(completed);
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 根据优先级获取待办事项
      */
@@ -103,7 +104,7 @@ public class TodoController {
         List<Todo> todos = todoService.getTodosByPriority(priority.toUpperCase());
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 根据分类获取待办事项
      */
@@ -112,7 +113,7 @@ public class TodoController {
         List<Todo> todos = todoService.getTodosByCategory(category);
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 搜索待办事项
      */
@@ -121,7 +122,7 @@ public class TodoController {
         List<Todo> todos = todoService.searchTodos(keyword);
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 获取高优先级未完成任务
      */
@@ -130,7 +131,7 @@ public class TodoController {
         List<Todo> todos = todoService.getHighPriorityPendingTodos();
         return ResponseEntity.ok(todos);
     }
-    
+
     /**
      * 批量更新完成状态
      */
@@ -141,25 +142,23 @@ public class TodoController {
             @SuppressWarnings("unchecked")
             List<Long> ids = (List<Long>) request.get("ids");
             Boolean completed = (Boolean) request.get("completed");
-            
+
             int updatedCount = todoService.batchUpdateCompleted(ids, completed);
-            
+
             Map<String, Object> response = Map.of(
-                "success", true,
-                "updatedCount", updatedCount,
-                "message", "批量更新成功"
-            );
-            
+                    "success", true,
+                    "updatedCount", updatedCount,
+                    "message", "批量更新成功");
+
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             Map<String, Object> response = Map.of(
-                "success", false,
-                "message", "批量更新失败: " + e.getMessage()
-            );
+                    "success", false,
+                    "message", "批量更新失败: " + e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
-    
+
     /**
      * 获取统计信息
      */

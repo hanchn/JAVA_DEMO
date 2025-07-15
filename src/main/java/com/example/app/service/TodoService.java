@@ -1,10 +1,11 @@
-package com.example.todolist.service;
+package com.example.app.service;
 
-import com.example.todolist.entity.Todo;
-import com.example.todolist.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.example.app.entity.Todo;
+import com.example.app.repository.TodoRepository;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,24 +15,24 @@ import java.util.Optional;
 @Service
 @Transactional
 public class TodoService {
-    
+
     @Autowired
     private TodoRepository todoRepository;
-    
+
     /**
      * 获取所有待办事项
      */
     public List<Todo> getAllTodos() {
         return todoRepository.findAll();
     }
-    
+
     /**
      * 根据ID获取待办事项
      */
     public Optional<Todo> getTodoById(Long id) {
         return todoRepository.findById(id);
     }
-    
+
     /**
      * 创建新的待办事项
      */
@@ -45,7 +46,7 @@ public class TodoService {
         }
         return todoRepository.save(todo);
     }
-    
+
     /**
      * 更新待办事项
      */
@@ -53,7 +54,7 @@ public class TodoService {
         Optional<Todo> optionalTodo = todoRepository.findById(id);
         if (optionalTodo.isPresent()) {
             Todo todo = optionalTodo.get();
-            
+
             // 更新字段
             if (todoDetails.getTitle() != null) {
                 todo.setTitle(todoDetails.getTitle());
@@ -70,12 +71,12 @@ public class TodoService {
             if (todoDetails.getCategory() != null) {
                 todo.setCategory(todoDetails.getCategory());
             }
-            
+
             return todoRepository.save(todo);
         }
         throw new RuntimeException("Todo not found with id: " + id);
     }
-    
+
     /**
      * 删除待办事项
      */
@@ -86,7 +87,7 @@ public class TodoService {
         }
         return false;
     }
-    
+
     /**
      * 切换完成状态
      */
@@ -99,42 +100,42 @@ public class TodoService {
         }
         throw new RuntimeException("Todo not found with id: " + id);
     }
-    
+
     /**
      * 根据完成状态获取待办事项
      */
     public List<Todo> getTodosByCompleted(Boolean completed) {
         return todoRepository.findByCompleted(completed);
     }
-    
+
     /**
      * 根据优先级获取待办事项
      */
     public List<Todo> getTodosByPriority(String priority) {
         return todoRepository.findByPriority(priority);
     }
-    
+
     /**
      * 根据分类获取待办事项
      */
     public List<Todo> getTodosByCategory(String category) {
         return todoRepository.findByCategory(category);
     }
-    
+
     /**
      * 搜索待办事项
      */
     public List<Todo> searchTodos(String keyword) {
         return todoRepository.searchByKeyword(keyword);
     }
-    
+
     /**
      * 获取高优先级未完成任务
      */
     public List<Todo> getHighPriorityPendingTodos() {
         return todoRepository.findHighPriorityPendingTodos();
     }
-    
+
     /**
      * 批量更新完成状态
      */
@@ -151,32 +152,32 @@ public class TodoService {
         }
         return count;
     }
-    
+
     /**
      * 获取统计信息
      */
     public Map<String, Object> getStatistics() {
         Map<String, Object> stats = new HashMap<>();
-        
+
         long totalCount = todoRepository.count();
         long completedCount = todoRepository.countCompletedTodos();
         long pendingCount = todoRepository.countPendingTodos();
-        
+
         long highPriorityCount = todoRepository.countByPriority("HIGH");
         long mediumPriorityCount = todoRepository.countByPriority("MEDIUM");
         long lowPriorityCount = todoRepository.countByPriority("LOW");
-        
+
         stats.put("total", totalCount);
         stats.put("completed", completedCount);
         stats.put("pending", pendingCount);
         stats.put("completionRate", totalCount > 0 ? (double) completedCount / totalCount * 100 : 0);
-        
+
         Map<String, Long> priorityStats = new HashMap<>();
         priorityStats.put("high", highPriorityCount);
         priorityStats.put("medium", mediumPriorityCount);
         priorityStats.put("low", lowPriorityCount);
         stats.put("priority", priorityStats);
-        
+
         return stats;
     }
 }
