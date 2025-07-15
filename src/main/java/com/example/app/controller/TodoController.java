@@ -11,6 +11,8 @@ import com.example.app.service.TodoService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/todos")
@@ -28,6 +30,15 @@ public class TodoController {
         List<Todo> todos = todoService.getAllTodos();
         System.err.println("获取所有待办事项");
         return ResponseEntity.ok(todos);
+    }
+
+    /**
+     * 测试接口
+     */
+    @GetMapping("/test")
+    public String test() {
+        System.err.println("测试接口");
+        return "[{code: 0, msg: \"success\"}]";
     }
 
     /**
